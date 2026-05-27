@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>AvikQuest</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;600&display=swap" rel="stylesheet">
+<style>
+:root{--ink:#08080f;--ink2:#0e0e1a;--ink3:#141423;--ink4:#1c1c30;--ink5:#252540;--glass:rgba(255,255,255,0.03);--glass2:rgba(255,255,255,0.06);--edge:rgba(255,255,255,0.07);--edge2:rgba(255,255,255,0.13);--txt:#f0f0ff;--txt2:#9090b8;--txt3:#5a5a80;--red:#ff2d55;--red2:#ff6b84;--gold:#ffd60a;--teal:#30d158;--blue:#0a84ff;--purple:#bf5af2;--orange:#ff9f0a;--r:8px;--rl:14px;--rxl:20px}
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+html,body{height:100%;font-family:'Inter',system-ui,sans-serif;background:var(--ink);color:var(--txt);overflow:hidden;-webkit-font-smoothing:antialiased}
+#bgc{position:fixed;inset:0;z-index:0;pointer-events:none}
+.shell{display:flex;height:100vh;position:relative;z-index:1}
+/* Sidebar */
+.sb{width:72px;flex-shrink:0;background:rgba(8,8,15,0.96);border-right:0.5px solid var(--edge);display:flex;flex-direction:column;align-items:center;padding:20px 0;gap:4px;z-index:10;backdrop-filter:blur(20px);transition:width 0.3s cubic-bezier(.4,0,.2,1);overflow:hidden}
+.sb:hover{width:218px}
+.sb:hover .nl{opacity:1;transform:translateX(0)}
+.sb:hover .lf{opacity:1}.sb:hover .li2{opacity:0}
+.lw{width:100%;padding:0 16px 18px;border-bottom:0.5px solid var(--edge);margin-bottom:6px;position:relative;height:42px;flex-shrink:0}
+.li2{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);font-size:20px;transition:opacity 0.2s}
+.lf{position:absolute;left:16px;top:50%;transform:translateY(-50%);opacity:0;transition:opacity 0.2s 0.1s;white-space:nowrap}
+.lf .lt{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--red);letter-spacing:1px}
+.lf .ls{font-size:9px;color:var(--txt3);font-family:'JetBrains Mono',monospace;margin-top:-1px}
+.nb{width:100%;display:flex;align-items:center;gap:13px;padding:9px 18px;border:none;background:none;color:var(--txt3);cursor:pointer;transition:all 0.15s;font-size:13px;white-space:nowrap;border-left:2px solid transparent;font-family:'Inter',sans-serif}
+.nb:hover{color:var(--txt);background:var(--glass2)}
+.nb.on{color:var(--red);border-left-color:var(--red);background:rgba(255,45,85,0.07);font-weight:500}
+.ni{font-size:17px;flex-shrink:0;width:20px;text-align:center}
+.nl{opacity:0;transform:translateX(-5px);transition:all 0.2s 0.05s}
+.sbf{margin-top:auto;width:100%;padding:14px 16px;border-top:0.5px solid var(--edge)}
+.avs{width:34px;height:34px;border-radius:50%;background:var(--ink5);border:1.5px solid var(--red);display:flex;align-items:center;justify-content:center;font-size:11px;font-weight:700;color:var(--red);flex-shrink:0;position:relative}
+.lvp{position:absolute;bottom:-3px;right:-3px;background:var(--gold);color:var(--ink);font-size:8px;font-weight:700;border-radius:8px;padding:0 3px;font-family:'JetBrains Mono',monospace}
+.sbc{opacity:0;transition:opacity 0.2s 0.1s;white-space:nowrap;margin-left:10px}
+.sb:hover .sbc{opacity:1}
+.sbn{font-size:12px;font-weight:600;color:var(--txt)}
+.sbx{height:2px;border-radius:1px;background:var(--ink5);margin-top:5px;width:100px;overflow:hidden}
+.sbxf{height:100%;border-radius:1px;background:var(--red);transition:width 0.6s}
+/* Main */
+.main{flex:1;overflow:hidden;display:flex;flex-direction:column}
+.pg{height:100%;overflow-y:auto;padding:28px 32px;animation:fsl 0.32s cubic-bezier(.4,0,.2,1)}
+@keyframes fsl{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
+.pg::-webkit-scrollbar{width:4px}.pg::-webkit-scrollbar-track{background:transparent}.pg::-webkit-scrollbar-thumb{background:var(--ink5);border-radius:2px}
+/* Page header */
+.ph{margin-bottom:24px}
+.pe{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--red);letter-spacing:0.15em;text-transform:uppercase;margin-bottom:5px}
+.pt{font-family:'Bebas Neue',sans-serif;font-size:38px;color:var(--txt);letter-spacing:1px;line-height:1}
+.ps{font-size:13px;color:var(--txt2);margin-top:5px}
+/* Hero banner */
+.dh{position:relative;border-radius:var(--rxl);overflow:hidden;background:var(--ink3);border:0.5px solid var(--edge);padding:24px;margin-bottom:18px}
+.dh::before{content:'';position:absolute;inset:0;background:radial-gradient(ellipse 55% 100% at 80% 50%,rgba(255,45,85,0.13) 0%,transparent 70%);pointer-events:none}
+.dhg{display:grid;grid-template-columns:auto 1fr auto;gap:22px;align-items:center;position:relative;z-index:1}
+.av{width:76px;height:76px;border-radius:50%;background:conic-gradient(var(--red) 0deg,#ff6b84 60deg,var(--ink4) 60deg);display:flex;align-items:center;justify-content:center;position:relative;animation:sr 7s linear infinite}
+@keyframes sr{to{transform:rotate(360deg)}}
+.avi{width:66px;height:66px;border-radius:50%;background:var(--ink3);display:flex;align-items:center;justify-content:center;font-size:20px;font-weight:700;color:var(--red);position:absolute;animation:srr 7s linear infinite}
+@keyframes srr{to{transform:rotate(-360deg)}}
+.lvb{position:absolute;bottom:-2px;right:-2px;background:var(--gold);color:var(--ink);font-size:9px;font-weight:700;border-radius:10px;padding:1px 5px;font-family:'JetBrains Mono',monospace;z-index:2}
+.hn{font-family:'Bebas Neue',sans-serif;font-size:26px;letter-spacing:0.5px;color:var(--txt)}
+.hc{font-size:11px;color:var(--red);font-weight:600;letter-spacing:0.05em;margin-top:2px}
+.xl{display:flex;justify-content:space-between;font-size:11px;color:var(--txt3);margin-bottom:5px;font-family:'JetBrains Mono',monospace}
+.xtr{height:6px;border-radius:3px;background:var(--ink5);overflow:hidden;margin-top:10px}
+.xf{height:100%;border-radius:3px;background:linear-gradient(90deg,var(--red),#ff6b84);transition:width 0.8s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.xf::after{content:'';position:absolute;top:0;left:-100%;width:100%;height:100%;background:linear-gradient(90deg,transparent,rgba(255,255,255,0.28),transparent);animation:sh 2.2s infinite}
+@keyframes sh{to{left:100%}}
+.bx{font-family:'Bebas Neue',sans-serif;font-size:46px;color:var(--gold);line-height:1;text-align:right}
+.bxl{font-size:10px;color:var(--txt3);font-family:'JetBrains Mono',monospace;margin-top:3px;text-align:right}
+/* Stat cards */
+.sgr{display:grid;grid-template-columns:repeat(4,1fr);gap:11px;margin-bottom:18px}
+.sc{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:14px;text-align:center;position:relative;overflow:hidden;transition:transform 0.2s,border-color 0.2s}
+.sc:hover{transform:translateY(-2px);border-color:var(--edge2)}
+.sc::after{content:'';position:absolute;bottom:0;left:0;right:0;height:2px;background:var(--sc,var(--red));opacity:0.7}
+.sv{font-family:'Bebas Neue',sans-serif;font-size:30px;color:var(--sc,var(--txt));line-height:1}
+.sn{font-size:10px;color:var(--txt3);letter-spacing:0.1em;text-transform:uppercase;margin-top:3px;font-family:'JetBrains Mono',monospace}
+.st{height:2px;border-radius:1px;background:var(--ink5);margin-top:8px;overflow:hidden}
+.sf{height:100%;border-radius:1px;background:var(--sc,var(--red));transition:width 0.8s 0.2s}
+/* Metrics */
+.mtr{display:grid;grid-template-columns:repeat(3,1fr);gap:11px;margin-bottom:18px}
+.mt{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:14px 16px}
+.mv{font-family:'Bebas Neue',sans-serif;font-size:26px;color:var(--txt)}
+.ml{font-size:10px;color:var(--txt3);margin-top:3px;font-family:'JetBrains Mono',monospace}
+/* Two col */
+.tc{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pn{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:18px}
+.pnt{font-size:10px;color:var(--txt3);text-transform:uppercase;letter-spacing:0.12em;font-family:'JetBrains Mono',monospace;margin-bottom:12px}
+/* Cat bars */
+.cb{margin-bottom:13px}
+.cbh{display:flex;justify-content:space-between;align-items:center;font-size:12px;margin-bottom:5px}
+.cbn{color:var(--txt2)}.cbp{font-family:'JetBrains Mono',monospace;font-size:10px;color:var(--txt3)}
+.cbt{height:4px;border-radius:2px;background:var(--ink5);overflow:hidden}
+.cbf{height:100%;border-radius:2px;transition:width 0.8s cubic-bezier(.4,0,.2,1)}
+/* Up next */
+.un{display:flex;align-items:flex-start;gap:9px;padding:9px 0;border-bottom:0.5px solid var(--edge);cursor:pointer;transition:opacity 0.15s}
+.un:last-child{border-bottom:none}.un:hover{opacity:0.7}
+.und{width:5px;height:5px;border-radius:50%;flex-shrink:0;margin-top:5px}
+.unt{font-size:12px;color:var(--txt)}
+.unm{font-size:10px;color:var(--txt3);font-family:'JetBrains Mono',monospace;margin-top:1px}
+/* Quest filters */
+.qf{display:flex;gap:5px;margin-bottom:16px;flex-wrap:wrap}
+.fb{font-size:10px;padding:5px 12px;border-radius:20px;border:0.5px solid var(--edge);background:transparent;color:var(--txt3);cursor:pointer;transition:all 0.15s;font-family:'JetBrains Mono',monospace}
+.fb:hover{color:var(--txt);border-color:var(--edge2)}
+.fb.on{background:var(--red);color:white;border-color:var(--red);font-weight:600}
+/* Quest items */
+.qg{display:flex;flex-direction:column;gap:5px}
+.qi{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:14px 16px;display:flex;align-items:flex-start;gap:13px;cursor:pointer;transition:all 0.2s cubic-bezier(.4,0,.2,1);position:relative;overflow:hidden}
+.qi::before{content:'';position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cc,var(--red));opacity:0;transition:opacity 0.2s}
+.qi:hover{border-color:var(--edge2);transform:translateX(3px);background:var(--ink4)}
+.qi:hover::before{opacity:1}
+.qi.dn{opacity:0.42}.qi.dn .qt{text-decoration:line-through;color:var(--txt3)}.qi.dn::before{opacity:1;background:var(--teal)}
+.ck{width:21px;height:21px;border-radius:50%;border:1.5px solid var(--edge2);display:flex;align-items:center;justify-content:center;flex-shrink:0;margin-top:1px;transition:all 0.2s;font-size:11px;color:transparent}
+.qi.dn .ck{background:var(--teal);border-color:var(--teal);color:white}
+.qb{flex:1;min-width:0}
+.qt{font-size:13px;font-weight:500;color:var(--txt);line-height:1.4}
+.qd{font-size:11px;color:var(--txt3);margin-top:4px;line-height:1.5;display:none}
+.qi:hover .qd{display:block;animation:ex 0.18s ease}
+@keyframes ex{from{opacity:0;transform:translateY(-3px)}to{opacity:1;transform:translateY(0)}}
+.qtg{display:flex;gap:5px;margin-top:7px;flex-wrap:wrap}
+.tg{font-size:10px;padding:2px 7px;border-radius:20px;font-family:'JetBrains Mono',monospace;font-weight:600}
+.tx{background:rgba(255,214,10,0.1);color:var(--gold)}
+.te{background:rgba(48,209,88,0.1);color:var(--teal)}
+.tm{background:rgba(255,159,10,0.1);color:var(--orange)}
+.th{background:rgba(255,45,85,0.1);color:var(--red)}
+.tc2{background:var(--ink5);color:var(--txt3)}
+/* Achievements */
+.ag{display:grid;grid-template-columns:repeat(auto-fill,minmax(148px,1fr));gap:11px}
+.ac{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:18px 14px;text-align:center;transition:all 0.2s}
+.ac.ea{border-color:rgba(255,214,10,0.3);background:rgba(255,214,10,0.04);animation:pg 3s infinite}
+@keyframes pg{0%,100%{box-shadow:0 0 0 0 rgba(255,214,10,0)}50%{box-shadow:0 0 14px 0 rgba(255,214,10,0.1)}}
+.ac.lk{opacity:0.22;filter:grayscale(1)}
+.ae{font-size:30px;margin-bottom:8px;display:block}
+.an{font-size:11px;font-weight:600;color:var(--txt)}
+.ad{font-size:10px;color:var(--txt3);margin-top:3px;line-height:1.4;font-family:'JetBrains Mono',monospace}
+.as2{display:inline-block;font-size:9px;margin-top:7px;padding:2px 7px;border-radius:10px;background:rgba(255,214,10,0.1);color:var(--gold);font-family:'JetBrains Mono',monospace}
+/* Stats page */
+.sdu{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-bottom:14px}
+.sp{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:20px}
+.spt{font-size:10px;text-transform:uppercase;letter-spacing:0.12em;color:var(--txt3);font-family:'JetBrains Mono',monospace;margin-bottom:16px}
+.sr2{display:flex;align-items:center;gap:9px;margin-bottom:12px}
+.srn{font-size:12px;color:var(--txt2);width:78px;flex-shrink:0}
+.srt{flex:1;height:4px;border-radius:2px;background:var(--ink5);overflow:hidden}
+.srf{height:100%;border-radius:2px;transition:width 0.8s cubic-bezier(.4,0,.2,1)}
+.srv{font-family:'JetBrains Mono',monospace;font-size:11px;font-weight:600;width:26px;text-align:right}
+.ll{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--rl);padding:20px}
+.lr{display:flex;align-items:center;gap:13px;padding:10px;border-radius:var(--r);margin-bottom:5px;border:0.5px solid transparent;transition:all 0.2s}
+.lr.rc{background:var(--ink4)}.lr.cu{background:rgba(255,45,85,0.08);border-color:rgba(255,45,85,0.25)}.lr.lk2{opacity:0.5}
+.ln{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-family:'Bebas Neue',sans-serif;font-size:15px;flex-shrink:0}
+.lr.rc .ln{background:var(--ink5);color:var(--txt2)}.lr.cu .ln{background:var(--red);color:white}.lr.lk2 .ln{background:var(--ink4);color:var(--txt3)}
+.ltl{font-size:13px;font-weight:600}.lr.cu .ltl{color:var(--red)}.lr.rc .ltl{color:var(--txt)}.lr.lk2 .ltl{color:var(--txt3)}
+.lsb{font-size:10px;color:var(--txt3);font-family:'JetBrains Mono',monospace;margin-top:1px}
+.lbd{margin-left:auto;font-size:10px;font-family:'JetBrains Mono',monospace}
+/* Cat breakdown */
+.catb{display:grid;grid-template-columns:repeat(4,1fr);gap:9px}
+.cbt2{background:var(--ink4);border-radius:var(--r);padding:13px;text-align:center}
+.cbe{font-size:20px;margin-bottom:5px}
+.cbv{font-family:'Bebas Neue',sans-serif;font-size:20px}
+.cbl{font-size:10px;color:var(--txt3);margin-top:2px;font-family:'JetBrains Mono',monospace}
+.cbtk{height:2px;border-radius:1px;background:var(--ink5);margin-top:7px;overflow:hidden}
+.cbtf{height:100%;border-radius:1px;transition:width 0.8s}
+/* Log */
+.lg{display:flex;flex-direction:column;gap:5px}
+.li3{background:var(--ink3);border:0.5px solid var(--edge);border-radius:var(--r);padding:11px 14px;display:flex;align-items:center;gap:11px;animation:fsl 0.3s ease}
+.ld{width:6px;height:6px;border-radius:50%;flex-shrink:0}
+.ltx{font-size:13px;color:var(--txt);flex:1}
+.lm{font-size:10px;color:var(--txt3);font-family:'JetBrains Mono',monospace}
+.lx{font-family:'JetBrains Mono',monospace;font-size:12px;font-weight:600;color:var(--gold)}
+/* Toast */
+.toast{position:fixed;bottom:26px;right:26px;z-index:999;background:var(--ink4);border:0.5px solid var(--edge2);border-radius:var(--rl);padding:13px 18px;min-width:210px;opacity:0;transform:translateY(10px) scale(0.97);transition:all 0.26s cubic-bezier(.4,0,.2,1);pointer-events:none;box-shadow:0 20px 60px rgba(0,0,0,0.5)}
+.toast.show{opacity:1;transform:translateY(0) scale(1)}
+.tx2{font-family:'Bebas Neue',sans-serif;font-size:22px;color:var(--gold)}
+.tt{font-size:11px;color:var(--txt3);margin-top:2px;font-family:'JetBrains Mono',monospace}
+/* Level up */
+.lvw{position:fixed;inset:0;z-index:1000;display:flex;align-items:center;justify-content:center;background:rgba(0,0,0,0);pointer-events:none;transition:background 0.4s}
+.lvw.sh{background:rgba(0,0,0,0.82);pointer-events:all}
+.lvc{background:var(--ink3);border:1px solid rgba(255,214,10,0.3);border-radius:var(--rxl);padding:44px 38px;text-align:center;max-width:360px;transform:scale(0.85) translateY(18px);opacity:0;transition:all 0.4s cubic-bezier(.17,.67,.32,1.3);position:relative;overflow:hidden}
+.lvw.sh .lvc{transform:scale(1) translateY(0);opacity:1}
+.lvc::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:conic-gradient(from 0deg,transparent 0deg,rgba(255,214,10,0.04) 60deg,transparent 120deg);animation:sr 4s linear infinite}
+.lem{font-size:52px;margin-bottom:12px;display:block;animation:bn 0.6s 0.3s cubic-bezier(.36,.07,.19,.97)}
+@keyframes bn{0%,100%{transform:translateY(0)}50%{transform:translateY(-12px)}}
+.ltl2{font-family:'Bebas Neue',sans-serif;font-size:40px;color:var(--gold);letter-spacing:2px;position:relative}
+.lsu{font-size:13px;color:var(--txt3);margin-top:7px;font-family:'JetBrains Mono',monospace}
+.lcl{font-family:'Bebas Neue',sans-serif;font-size:19px;color:var(--red);margin-top:11px;letter-spacing:1px;position:relative}
+.lbtn{margin-top:22px;padding:11px 30px;border-radius:30px;background:var(--red);color:white;border:none;font-size:14px;font-weight:700;cursor:pointer;font-family:'Inter',sans-serif;letter-spacing:0.05em;transition:all 0.15s;position:relative}
+.lbtn:hover{background:#ff6b84;transform:scale(1.04)}
+.em{text-align:center;padding:44px 0;color:var(--txt3);font-size:13px;font-family:'JetBrains Mono',monospace}
+</style>
+</head>
+<body>
+<canvas id="bgc"></canvas>
+<div class="shell">
+<aside class="sb" id="sb">
+  <div class="lw"><span class="li2">⚔</span><div class="lf"><div class="lt">AVIKQUEST</div><div class="ls">LIFE RPG v2.0</div></div></div>
+  <button class="nb on" onclick="nav('d',this)"><span class="ni">⬡</span><span class="nl">Dashboard</span></button>
+  <button class="nb" onclick="nav('q',this)"><span class="ni">📜</span><span class="nl">Quests</span></button>
+  <button class="nb" onclick="nav('s',this)"><span class="ni">📊</span><span class="nl">Stats</span></button>
+  <button class="nb" onclick="nav('a',this)"><span class="ni">🏆</span><span class="nl">Achievements</span></button>
+  <button class="nb" onclick="nav('l',this)"><span class="ni">📋</span><span class="nl">Activity Log</span></button>
+  <div class="sbf"><div style="display:flex;align-items:center"><div class="avs">AM<div class="lvp" id="sblv">1</div></div><div class="sbc"><div class="sbn">Avik Mandhyan</div><div class="sbx"><div class="sbxf" id="sbxf" style="width:0%"></div></div></div></div></div>
+</aside>
+<main class="main"><div class="pg" id="pr"></div></main>
+</div>
+<div class="toast" id="tst"><div class="tx2" id="txp">+120 XP</div><div class="tt" id="ttl">Quest complete</div></div>
+<div class="lvw" id="lvw" onclick="clv()"><div class="lvc" onclick="event.stopPropagation()"><span class="lem">🎖</span><div class="ltl2">LEVEL UP</div><div class="lsu" id="lsu"></div><div class="lcl" id="lcl"></div><button class="lbtn" onclick="clv()">CONTINUE</button></div></div>
+<script>
+(function(){
+  const c=document.getElementById('bgc'),ctx=c.getContext('2d');
+  let W,H,pts=[];
+  function rs(){W=c.width=window.innerWidth;H=c.height=window.innerHeight}
+  rs();window.addEventListener('resize',rs);
+  for(let i=0;i<65;i++)pts.push({x:Math.random()*1920,y:Math.random()*1080,vx:(Math.random()-0.5)*0.15,vy:(Math.random()-0.5)*0.15,r:Math.random()*1.1+0.3,a:Math.random()});
+  function dr(){
+    ctx.clearRect(0,0,W,H);
+    pts.forEach(p=>{p.x+=p.vx;p.y+=p.vy;if(p.x<0||p.x>W)p.vx*=-1;if(p.y<0||p.y>H)p.vy*=-1;ctx.beginPath();ctx.arc(p.x,p.y,p.r,0,Math.PI*2);ctx.fillStyle=`rgba(255,45,85,${p.a*0.35})`;ctx.fill()});
+    for(let i=0;i<pts.length;i++)for(let j=i+1;j<pts.length;j++){const dx=pts[i].x-pts[j].x,dy=pts[i].y-pts[j].y,d=Math.sqrt(dx*dx+dy*dy);if(d<110){ctx.beginPath();ctx.moveTo(pts[i].x,pts[i].y);ctx.lineTo(pts[j].x,pts[j].y);ctx.strokeStyle=`rgba(255,45,85,${0.055*(1-d/110)})`;ctx.lineWidth=0.5;ctx.stroke()}}
+    requestAnimationFrame(dr);
+  }
+  dr();
+})();
+
+const QS=[
+  {id:'c1',cat:'career',title:'Get NISM Series XV certification',desc:'Research Analyst cert — SEBI-recognised, legally required for equity research in India. ~Rs.2,000. Do this first.',xp:120,diff:'medium',stat:'intellect'},
+  {id:'c2',cat:'career',title:'Get NISM Series VIII certification',desc:'Equity Derivatives. Pairs with Series XV for a credential stack that signals real market knowledge.',xp:100,diff:'medium',stat:'intellect'},
+  {id:'c3',cat:'career',title:'Build a Python DCF model on GitHub',desc:'Public repo, polished README. MNC recruiters Google you — give them something impressive.',xp:130,diff:'medium',stat:'intellect'},
+  {id:'c4',cat:'career',title:'Build a Python stock screener',desc:'yfinance and pandas. Clean code, clear docs. Public on GitHub.',xp:130,diff:'medium',stat:'intellect'},
+  {id:'c5',cat:'career',title:'Build a macro dashboard in Python',desc:'Use Streamlit for a visual interface — shows finance + tech fluency in one project.',xp:140,diff:'hard',stat:'intellect'},
+  {id:'c6',cat:'career',title:'Cold-reach 5 IB analysts on LinkedIn',desc:'Christ University alumni first. Personalise every message — weekly habit.',xp:80,diff:'easy',stat:'presence'},
+  {id:'c7',cat:'career',title:'Reach 500+ LinkedIn connections',desc:'10 targeted requests per week. Finance and tech professionals only.',xp:70,diff:'medium',stat:'presence'},
+  {id:'c8',cat:'career',title:'Post 4 weeks of LinkedIn content',desc:'One economics or markets insight per week for a month. Own your search results.',xp:90,diff:'medium',stat:'presence'},
+  {id:'c9',cat:'career',title:'Apply to a Tier 1 MNC internship',desc:'Goldman, JP Morgan, Morgan Stanley, Citi, HSBC, Kotak IB. Off-campus, direct. Highest-impact move.',xp:200,diff:'hard',stat:'hustle'},
+  {id:'c10',cat:'career',title:'Enter CFA Research Challenge',desc:'Free to enter. Goldman and JP Morgan judges. Lead a team from Christ University.',xp:180,diff:'hard',stat:'intellect'},
+  {id:'c11',cat:'career',title:'Publish a 4th research paper',desc:'Markets or macro theme on Academia.edu. Share a LinkedIn summary thread.',xp:150,diff:'hard',stat:'intellect'},
+  {id:'c12',cat:'career',title:'Document Friends Financial internship',desc:'Quantify everything — what you built, tech stack, measurable impact. Bullet points.',xp:60,diff:'easy',stat:'hustle'},
+  {id:'c13',cat:'career',title:'Update resume and LinkedIn fully',desc:'All internships, publications, skills, projects. 100% consistent. Professional headshot.',xp:50,diff:'easy',stat:'presence'},
+  {id:'c14',cat:'career',title:'Land a full-time offer of Rs.18 LPA+',desc:'The endgame. Apply only at this level. Negotiate hard — push for the top of every band.',xp:500,diff:'hard',stat:'hustle'},
+  {id:'f1',cat:'fitness',title:'Work out 3x/week for a month',desc:'Any format — gym, run, calisthenics. 12 sessions total. Consistency over intensity.',xp:100,diff:'medium',stat:'grit'},
+  {id:'f2',cat:'fitness',title:'Run 5km without stopping',desc:'Build up gradually. Track with a free app. Time yourself then beat it.',xp:80,diff:'medium',stat:'grit'},
+  {id:'f3',cat:'fitness',title:'7-day sleep streak (7+ hours)',desc:'Highest-ROI cognitive tool you own. No exceptions for one week.',xp:60,diff:'easy',stat:'grit'},
+  {id:'f4',cat:'fitness',title:'Cut junk food for 2 weeks',desc:'No chips, biscuits, fried snacks. 14 days, no exceptions.',xp:70,diff:'medium',stat:'grit'},
+  {id:'f5',cat:'fitness',title:'30-day workout streak',desc:'Rest days can be light walks. Build the identity, not just the habit.',xp:180,diff:'hard',stat:'grit'},
+  {id:'f6',cat:'fitness',title:'Drink 2L water daily for 2 weeks',desc:'Simple. Ignored. Impactful. Set phone reminders.',xp:50,diff:'easy',stat:'grit'},
+  {id:'m1',cat:'finance',title:'Build a monthly personal budget',desc:'Track every rupee in and out. Income vs fixed vs discretionary. Spreadsheet.',xp:60,diff:'easy',stat:'intellect'},
+  {id:'m2',cat:'finance',title:'Save Rs.5,000 from internship stipend',desc:'First savings milestone. Separate account. Do not touch it.',xp:90,diff:'medium',stat:'grit'},
+  {id:'m3',cat:'finance',title:'Open a Zerodha or Groww account',desc:'30 minutes of setup. Direct mutual funds or index funds.',xp:70,diff:'easy',stat:'intellect'},
+  {id:'m4',cat:'finance',title:'Start a monthly SIP',desc:'Rs.500/month in a Nifty 50 index fund. Invest before spending.',xp:100,diff:'medium',stat:'intellect'},
+  {id:'m5',cat:'finance',title:'Save Rs.20,000 total',desc:'Cumulative savings target. Emergency fund is the foundation.',xp:150,diff:'hard',stat:'grit'},
+  {id:'s1',cat:'social',title:'Get a professional headshot',desc:'Clean background, good lighting, business-casual. LinkedIn and resume.',xp:40,diff:'easy',stat:'presence'},
+  {id:'s2',cat:'social',title:'Build a daily grooming routine',desc:'Skin, hair, clothes. Looking put-together is a signal in finance.',xp:50,diff:'easy',stat:'presence'},
+  {id:'s3',cat:'social',title:'Attend 1 industry event or meetup',desc:'Finance or tech event. Leave with at least 3 new contacts.',xp:90,diff:'medium',stat:'presence'},
+  {id:'s4',cat:'social',title:'Cold-email 3 people you admire',desc:'Economists, analysts, founders. One thoughtful question each. No ask.',xp:70,diff:'medium',stat:'presence'},
+  {id:'s5',cat:'social',title:'Buy one quality interview outfit',desc:'Sharp, well-fitted business-casual. Interviews are performances.',xp:50,diff:'easy',stat:'presence'},
+  {id:'s6',cat:'social',title:'Read 1 book on communication',desc:'Try: "Never Split the Difference" by Voss or "How to Win Friends" by Carnegie.',xp:80,diff:'medium',stat:'presence'},
+];
+
+const ACH=[
+  {id:'a1',icon:'⚔️',name:'First Blood',desc:'Complete your first quest',req:(d,q,x)=>d>=1},
+  {id:'a2',icon:'🔥',name:'On Fire',desc:'Complete 5 quests',req:(d,q,x)=>d>=5},
+  {id:'a3',icon:'🧠',name:'Scholar',desc:'Complete 3 career quests',req:(d,q,x)=>q.filter(i=>i.cat==='career'&&i.done).length>=3},
+  {id:'a4',icon:'🎯',name:'Tier 1 Hunter',desc:'Apply to a Tier 1 MNC internship',req:(d,q,x)=>q.find(i=>i.id==='c9')?.done},
+  {id:'a5',icon:'💪',name:'Iron Will',desc:'Complete all fitness quests',req:(d,q,x)=>q.filter(i=>i.cat==='fitness'&&!i.done).length===0},
+  {id:'a6',icon:'💰',name:'Money Moves',desc:'Complete all finance quests',req:(d,q,x)=>q.filter(i=>i.cat==='finance'&&!i.done).length===0},
+  {id:'a7',icon:'🚀',name:'The 55%',desc:'Reach 1,000 XP total',req:(d,q,x)=>x>=1000},
+  {id:'a8',icon:'👑',name:'Analyst Class',desc:'Complete 10 quests',req:(d,q,x)=>d>=10},
+  {id:'a9',icon:'🌐',name:'Networker',desc:'Complete 3 social quests',req:(d,q,x)=>q.filter(i=>i.cat==='social'&&i.done).length>=3},
+  {id:'a10',icon:'🏦',name:'Big Offer',desc:'Land the Rs.18 LPA+ offer',req:(d,q,x)=>q.find(i=>i.id==='c14')?.done},
+  {id:'a11',icon:'⭐',name:'All-Rounder',desc:'Complete quests in all 4 categories',req:(d,q,x)=>['career','fitness','finance','social'].every(c=>q.some(i=>i.cat===c&&i.done))},
+  {id:'a12',icon:'💎',name:'Endgame',desc:'Reach 3,000 XP total',req:(d,q,x)=>x>=3000},
+];
+
+const LVS=[{xp:0,lv:1,title:'The Analyst',sub:'Economics Adept'},{xp:500,lv:2,title:'The Strategist',sub:'Junior Operator'},{xp:1200,lv:3,title:'The Builder',sub:'Senior Analyst'},{xp:2000,lv:4,title:'The Operator',sub:'Finance + Tech Hybrid'},{xp:3500,lv:5,title:'The Architect',sub:'MNC Principal'}];
+const CC={career:'#bf5af2',fitness:'#30d158',finance:'#ffd60a',social:'#ff6b84'};
+const CI={career:'💼',fitness:'🏃',finance:'💰',social:'🌟'};
+const CL={career:'Career',fitness:'Fitness',finance:'Finance',social:'Network'};
+const SC={intellect:'#bf5af2',hustle:'#30d158',presence:'#ff6b84',grit:'#0a84ff'};
+
+let G={quests:JSON.parse(JSON.stringify(QS)),totalXp:0,log:[],stats:{intellect:10,hustle:10,presence:10,grit:10},catXp:{career:0,fitness:0,finance:0,social:0},earnedAch:[]};
+let pg='d',qf='all';
+try{const s=localStorage.getItem('aq4');if(s){const ld=JSON.parse(s);ld.quests=QS.map(q=>{const f=ld.quests?.find(lq=>lq.id===q.id);return f?{...q,done:f.done}:q});G=ld}}catch(e){}
+
+function sv(){try{localStorage.setItem('aq4',JSON.stringify(G))}catch(e){}}
+function gL(x){let l=LVS[0];for(const v of LVS){if(x>=v.xp)l=v}return l}
+function gN(x){for(const v of LVS){if(x<v.xp)return v}return null}
+function xP(x){const c=gL(x),n=gN(x);if(!n)return{pct:100,txt:`${x} XP`};const p=Math.round((x-c.xp)/(n.xp-c.xp)*100);return{pct:p,txt:`${x-c.xp} / ${n.xp-c.xp}`}}
+
+function nav(p,el){pg=p;document.querySelectorAll('.nb').forEach(b=>b.classList.remove('on'));el.classList.add('on');render()}
+
+function tQ(id){
+  const q=G.quests.find(x=>x.id===id);if(!q)return;
+  const pL=gL(G.totalXp).lv;
+  if(!q.done){
+    q.done=true;G.totalXp+=q.xp;G.catXp[q.cat]=(G.catXp[q.cat]||0)+q.xp;
+    G.stats[q.stat]=Math.min(99,(G.stats[q.stat]||10)+Math.round(q.xp/15));
+    G.log.unshift({id:q.id,title:q.title,xp:q.xp,cat:q.cat,time:new Date().toLocaleString('en-IN',{day:'numeric',month:'short',year:'numeric',hour:'2-digit',minute:'2-digit'})});
+    shT(`+${q.xp} XP`,q.title);chA();
+    const nL=gL(G.totalXp).lv;if(nL>pL)setTimeout(()=>shLv(gL(G.totalXp)),700);
+  }else{
+    q.done=false;G.totalXp=Math.max(0,G.totalXp-q.xp);G.catXp[q.cat]=Math.max(0,(G.catXp[q.cat]||0)-q.xp);
+    G.stats[q.stat]=Math.max(10,(G.stats[q.stat]||10)-Math.round(q.xp/15));G.log=G.log.filter(l=>l.id!==q.id);
+  }
+  sv();render();
+}
+
+function chA(){const d=G.quests.filter(q=>q.done).length;for(const a of ACH){if(!G.earnedAch.includes(a.id)&&a.req(d,G.quests,G.totalXp)){G.earnedAch.push(a.id);setTimeout(()=>shT(`🏆 ${a.name}`,a.desc),1100)}}}
+let tT;
+function shT(x,t){document.getElementById('txp').textContent=x;document.getElementById('ttl').textContent=t;const e=document.getElementById('tst');e.classList.add('show');clearTimeout(tT);tT=setTimeout(()=>e.classList.remove('show'),3200)}
+function shLv(l){document.getElementById('lsu').textContent=`You reached Level ${l.lv}`;document.getElementById('lcl').textContent=`${l.title} — ${l.sub}`;document.getElementById('lvw').classList.add('sh')}
+function clv(){document.getElementById('lvw').classList.remove('sh')}
+
+function render(){
+  const lv=gL(G.totalXp),p=xP(G.totalXp);
+  document.getElementById('sblv').textContent=lv.lv;
+  document.getElementById('sbxf').style.width=p.pct+'%';
+  const r=document.getElementById('pr');r.className='pg';
+  if(pg==='d')r.innerHTML=rD();
+  else if(pg==='q')r.innerHTML=rQ();
+  else if(pg==='s')r.innerHTML=rS();
+  else if(pg==='a')r.innerHTML=rA();
+  else if(pg==='l')r.innerHTML=rL();
+}
+
+function rD(){
+  const lv=gL(G.totalXp),p=xP(G.totalXp),s=G.stats,cx=G.catXp;
+  const done=G.quests.filter(q=>q.done).length,total=G.quests.length;
+  const up=G.quests.filter(q=>!q.done).slice(0,5);
+  return`<div class="ph"><div class="pe">HERO OVERVIEW</div><div class="pt">COMMAND CENTER</div></div>
+<div class="dh"><div class="dhg">
+<div class="av"><div class="avi">AM<div class="lvb">LV${lv.lv}</div></div></div>
+<div><div class="hn">AVIK MANDHYAN</div><div class="hc">${lv.title.toUpperCase()} — ${lv.sub.toUpperCase()}</div>
+<div><div class="xl"><span>EXPERIENCE</span><span>${p.txt} XP</span></div><div class="xtr"><div class="xf" style="width:${p.pct}%"></div></div></div></div>
+<div><div class="bx">${G.totalXp}</div><div class="bxl">TOTAL XP</div></div>
+</div></div>
+<div class="sgr">${Object.entries(s).map(([n,v])=>`<div class="sc" style="--sc:${SC[n]}"><div class="sv">${v}</div><div class="sn">${n}</div><div class="st"><div class="sf" style="width:${Math.min(v,100)}%"></div></div></div>`).join('')}</div>
+<div class="mtr">
+<div class="mt"><div class="mv">${done}<span style="font-size:15px;color:var(--txt3)"> / ${total}</span></div><div class="ml">QUESTS COMPLETE</div></div>
+<div class="mt"><div class="mv">${Math.round(done/total*100)}<span style="font-size:15px;color:var(--txt3)">%</span></div><div class="ml">OVERALL PROGRESS</div></div>
+<div class="mt"><div class="mv">${G.earnedAch.length}<span style="font-size:15px;color:var(--txt3)"> / ${ACH.length}</span></div><div class="ml">ACHIEVEMENTS</div></div>
+</div>
+<div class="tc">
+<div class="pn"><div class="pnt">CATEGORY PROGRESS</div>${Object.entries(cx).map(([cat,xp])=>{const t=G.quests.filter(q=>q.cat===cat).reduce((a,q)=>a+q.xp,0),pc=Math.round(xp/t*100);return`<div class="cb"><div class="cbh"><span class="cbn">${CI[cat]} ${CL[cat]}</span><span class="cbp">${pc}%</span></div><div class="cbt"><div class="cbf" style="width:${pc}%;background:${CC[cat]}"></div></div></div>`}).join('')}</div>
+<div class="pn"><div class="pnt">UP NEXT</div>${up.map(q=>`<div class="un" onclick="nav('q',document.querySelectorAll('.nb')[1])"><div class="und" style="background:${CC[q.cat]}"></div><div><div class="unt">${q.title}</div><div class="unm">+${q.xp} XP · ${q.diff}</div></div></div>`).join('')}${!up.length?'<div style="color:var(--txt3);font-size:13px;font-family:JetBrains Mono,monospace">All quests complete 🎖</div>':''}</div>
+</div>`
+}
+
+function rQ(){
+  const fls=[['all','All'],['career','💼 Career'],['fitness','🏃 Fitness'],['finance','💰 Finance'],['social','🌟 Network'],['done','✓ Done']];
+  const fil=G.quests.filter(q=>qf==='all'?true:qf==='done'?q.done:q.cat===qf).sort((a,b)=>a.done-b.done);
+  return`<div class="ph"><div class="pe">MISSION BOARD</div><div class="pt">ACTIVE QUESTS</div><div class="ps">${G.quests.filter(q=>q.done).length} of ${G.quests.length} complete — click any quest to toggle</div></div>
+<div class="qf">${fls.map(([f,l])=>`<button class="fb ${qf===f?'on':''}" onclick="sF('${f}')">${l}</button>`).join('')}</div>
+<div class="qg">${fil.map(q=>`<div class="qi ${q.done?'dn':''}" style="--cc:${CC[q.cat]}" onclick="tQ('${q.id}')"><div class="ck">${q.done?'✓':''}</div><div class="qb"><div class="qt">${q.title}</div><div class="qd">${q.desc}</div><div class="qtg"><span class="tg tx">+${q.xp} XP</span><span class="tg t${q.diff[0]}">${q.diff}</span><span class="tg tc2">${CI[q.cat]} ${CL[q.cat]}</span></div></div></div>`).join('')}${!fil.length?'<div class="em">No quests match this filter.</div>':''}</div>`
+}
+function sF(f){qf=f;render()}
+
+function rS(){
+  const s=G.stats,cx=G.catXp,mx=Math.max(...Object.values(cx),1);
+  return`<div class="ph"><div class="pe">CHARACTER SHEET</div><div class="pt">STATS</div></div>
+<div class="sdu">
+<div class="sp"><div class="spt">CHARACTER ATTRIBUTES</div>${Object.entries(s).map(([n,v])=>`<div class="sr2"><div class="srn">${n.charAt(0).toUpperCase()+n.slice(1)}</div><div class="srt"><div class="srf" style="width:${Math.min(v,100)}%;background:${SC[n]}"></div></div><div class="srv" style="color:${SC[n]}">${v}</div></div>`).join('')}</div>
+<div class="sp"><div class="spt">CATEGORY XP</div>${Object.entries(cx).map(([cat,xp])=>`<div class="sr2"><div class="srn">${CI[cat]} ${CL[cat]}</div><div class="srt"><div class="srf" style="width:${Math.round(xp/mx*100)}%;background:${CC[cat]}"></div></div><div class="srv" style="color:${CC[cat]}">${xp}</div></div>`).join('')}</div>
+</div>
+<div class="ll"><div class="spt" style="margin-bottom:12px">LEVEL PROGRESSION</div>${LVS.map(l=>{const re=G.totalXp>=l.xp,cu=gL(G.totalXp).lv===l.lv,cl=cu?'cu':re?'rc':'lk2';return`<div class="lr ${cl}"><div class="ln">${l.lv}</div><div><div class="ltl">${l.title}</div><div class="lsb">${l.sub} · ${l.xp.toLocaleString()} XP</div></div><div class="lbd" style="color:${cu?'var(--red)':re?'var(--teal)':'var(--txt3)'}">${cu?'▶ NOW':re?'✓':'–'}</div></div>`}).join('')}</div>
+<div style="height:14px"></div>
+<div class="pn"><div class="pnt">QUEST BREAKDOWN</div><div class="catb">${Object.entries(CL).map(([cat,label])=>{const cQ=G.quests.filter(q=>q.cat===cat),cD=cQ.filter(q=>q.done).length,pc=Math.round(cD/cQ.length*100);return`<div class="cbt2"><div class="cbe">${CI[cat]}</div><div class="cbv" style="color:${CC[cat]}">${cD}<span style="font-size:13px;color:var(--txt3)">/${cQ.length}</span></div><div class="cbl">${label}</div><div class="cbtk"><div class="cbtf" style="width:${pc}%;background:${CC[cat]}"></div></div></div>`}).join('')}</div></div>`
+}
+
+function rA(){
+  const d=G.quests.filter(q=>q.done).length;
+  return`<div class="ph"><div class="pe">HALL OF HONOUR</div><div class="pt">ACHIEVEMENTS</div><div class="ps">${G.earnedAch.length} of ${ACH.length} unlocked</div></div>
+<div class="ag">${ACH.map(a=>{const e=a.req(d,G.quests,G.totalXp);return`<div class="ac ${e?'ea':'lk'}"><span class="ae">${a.icon}</span><div class="an">${a.name}</div><div class="ad">${a.desc}</div>${e?'<div class="as2">✓ EARNED</div>':''}</div>`}).join('')}</div>`
+}
+
+function rL(){
+  return`<div class="ph"><div class="pe">MISSION RECORD</div><div class="pt">ACTIVITY LOG</div></div>
+${G.log.length?`<div class="lg">${G.log.slice(0,50).map(l=>`<div class="li3"><div class="ld" style="background:${CC[l.cat]}"></div><div style="flex:1"><div class="ltx">${l.title}</div><div class="lm">${l.time} · ${CL[l.cat]}</div></div><div class="lx">+${l.xp} XP</div></div>`).join('')}</div>`:'<div class="em">No activity yet. Complete quests to fill your log.</div>'}`
+}
+
+render();
+</script>
+</body>
+</html>
