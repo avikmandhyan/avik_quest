@@ -269,9 +269,48 @@ const SC={intellect:'#bf5af2',hustle:'#30d158',presence:'#ff6b84',grit:'#0a84ff'
 
 let G={quests:JSON.parse(JSON.stringify(QS)),totalXp:0,log:[],stats:{intellect:10,hustle:10,presence:10,grit:10},catXp:{career:0,fitness:0,finance:0,social:0},earnedAch:[]};
 let pg='d',qf='all';
-try{const s=localStorage.getItem('aq4');if(s){const ld=JSON.parse(s);ld.quests=QS.map(q=>{const f=ld.quests?.find(lq=>lq.id===q.id);return f?{...q,done:f.done}:q});G=ld}}catch(e){}
 
-function sv(){try{localStorage.setItem('aq4',JSON.stringify(G))}catch(e){}}
+// Load from disk via pywebview API (falls back to localStorage for browser testing)
+async function loadState(){
+  try{
+    let ld = null;
+    // Try pywebview API first (reads from disk file)
+    if(window.pywebview && window.pywebview.api){
+      ld = await window.pywebview.api.load();
+    }
+    // Fallback to localStorage (works reliably over HTTP)
+    if(!ld){
+      const s = localStorage.getItem('aq4');
+      if(s) ld = JSON.parse(s);
+    }
+    if(ld){
+      ld.quests = QS.map(q=>{
+        const f = ld.quests?.find(lq=>lq.id===q.id);
+        return f ? {...q, done:f.done} : q;
+      });
+      G = ld;
+    }
+  }catch(e){ console.warn('Load failed:',e); }
+  render();
+}
+
+function sv(){
+  try{
+    // Save to disk via pywebview API
+    if(window.pywebview && window.pywebview.api){
+      window.pywebview.api.save(G);
+    }
+    // Always also save to localStorage as backup
+    localStorage.setItem('aq4', JSON.stringify(G));
+  }catch(e){}
+}
+
+window.addEventListener('beforeunload', sv);
+
+// Start loading — over HTTP, pywebview API is ready almost immediately
+window.addEventListener('load', ()=>{
+  setTimeout(loadState, 150);
+});
 function gL(x){let l=LVS[0];for(const v of LVS){if(x>=v.xp)l=v}return l}
 function gN(x){for(const v of LVS){if(x<v.xp)return v}return null}
 function xP(x){const c=gL(x),n=gN(x);if(!n)return{pct:100,txt:`${x} XP`};const p=Math.round((x-c.xp)/(n.xp-c.xp)*100);return{pct:p,txt:`${x-c.xp} / ${n.xp-c.xp}`}}
@@ -367,7 +406,8 @@ function rL(){
 ${G.log.length?`<div class="lg">${G.log.slice(0,50).map(l=>`<div class="li3"><div class="ld" style="background:${CC[l.cat]}"></div><div style="flex:1"><div class="ltx">${l.title}</div><div class="lm">${l.time} · ${CL[l.cat]}</div></div><div class="lx">+${l.xp} XP</div></div>`).join('')}</div>`:'<div class="em">No activity yet. Complete quests to fill your log.</div>'}`
 }
 
-render();
+// Loading is handled by the window load event listener above
+
 </script>
 </body>
 </html>
